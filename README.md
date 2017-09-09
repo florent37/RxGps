@@ -4,7 +4,7 @@ Finding current location cannot be easier on Android !
 
 <b>- RxJava2</b> compatible
 
-<b>- Automatically ask for gps runtime permissions on demand</b>
+<b>- Automatically ask for gps runtime permissions</b>
  
 <b>- Check if play services are available for you ;)</b>
 
