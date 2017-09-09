@@ -1,0 +1,25 @@
+apply plugin: 'com.android.library'
+apply plugin: 'me.tatarka.retrolambda'
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion "26.0.0"
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    compile 'io.reactivex.rxjava2:rxjava:2.0.7'
+    compile 'com.google.android.gms:play-services-location:11.0.4'
+    compile 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
+}
