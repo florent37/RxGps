@@ -45,7 +45,6 @@ new RxGps(this).lastLocation()
 
                 .flatMapMaybe(rxGps::geocoding)
 
-                .doOnSubscribe(this::addDisposable)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
 
