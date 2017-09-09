@@ -4,8 +4,6 @@ Finding current location cannot be easier on Android !
 
 RxJava2 compatible, automatically ask for gps permissions on demand, and check if play services are available for you ;)
 
-[![screen](https://raw.githubusercontent.com/florent37/SingleDateAndTimePicker/master/media/new_video.gif)](https://www.github.com/florent37/SingleDateAndTimePicker)
-
 # Download
 
 <a href='https://ko-fi.com/A160LCC' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://az743702.vo.msecnd.net/cdn/kofi1.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
