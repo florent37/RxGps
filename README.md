@@ -49,9 +49,9 @@ new RxGps(this).lastLocation()
                     addressText.setText(getAddressText(address));
                 }, throwable -> {
                     if (throwable instanceof RxGps.PermissionException) {
-                        displayError(throwable.getMessage());
+                        //the user does not allow the permission
                     } else if (throwable instanceof RxGps.PlayServicesNotAvailableException) {
-                        displayError(throwable.getMessage());
+                         //the user do not have play services
                     }
                 });
 
