@@ -2,12 +2,12 @@ apply plugin: 'com.android.library'
 apply plugin: 'me.tatarka.retrolambda'
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.0"
+    compileSdkVersion project.sdk
+    buildToolsVersion project.buildTools
 
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 26
+        minSdkVersion project.minSdk
+        targetSdkVersion project.sdk
         versionCode 1
         versionName "1.0"
     }
@@ -22,4 +22,35 @@ dependencies {
     compile 'io.reactivex.rxjava2:rxjava:2.0.7'
     compile 'com.google.android.gms:play-services-location:11.0.4'
     compile 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
+}
+
+
+ext {
+    bintrayRepo = 'maven'
+    bintrayName = 'RxGps'
+    orgName = 'florent37'
+
+    publishedGroupId = 'com.github.florent37'
+    libraryName = 'RxGps'
+    artifact = 'rxgps'
+
+    libraryDescription = 'RxGps'
+
+    siteUrl = 'https://github.com/florent37/RxGps'
+    gitUrl = 'https://github.com/florent37/RxGps.git'
+
+    libraryVersion = rootProject.ext.libraryVersion
+
+    developerId = 'florent37'
+    developerName = 'Florent Champigny'
+    developerEmail = 'champigny.florent@gmail.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+
+if (project.rootProject.file('local.properties').exists()) {
+    apply from: rootProject.file('gradle/install-v1.gradle')
+    apply from: rootProject.file('gradle/bintray-android-v1.gradle')
 }

@@ -2,12 +2,13 @@ apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.0"
+    compileSdkVersion project.sdk
+    buildToolsVersion project.buildTools
+
     defaultConfig {
+        minSdkVersion project.minSdk
+        targetSdkVersion project.sdk
         applicationId "com.github.florent37.rxgps.sample"
-        minSdkVersion 14
-        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
     }
@@ -18,7 +19,7 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:26.+'
+    compile 'com.android.support:appcompat-v7:' + project.supportVersion
     compile project(path: ':rxgps')
 
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'

@@ -1,0 +1,1 @@
+./gradlew clean :rxgps:install :rxgps:bintrayUpload
