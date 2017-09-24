@@ -66,7 +66,7 @@ Forked from patloew <b>RxLocation</b>
 https://github.com/patloew/RxLocation
 
 And use tbruyelle <b>RxPermission</b>
-https://github.com/florent37/RxGps
+https://github.com/tbruyelle/RxPermissions
 
 # Credits
 
