@@ -3,10 +3,11 @@
 buildscript {
     repositories {
         jcenter()
+        google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
-        classpath 'me.tatarka:gradle-retrolambda:3.6.0'
+        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'me.tatarka:gradle-retrolambda:3.7.0'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.4.1'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
 
@@ -18,6 +19,7 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+        google()
         maven { url 'https://jitpack.io' }
         maven { url 'https://maven.google.com' }
     }
@@ -29,8 +31,8 @@ task clean(type: Delete) {
 
 ext {
     sdk = 26
-    buildTools = "26.0.0"
+    buildTools = "26.0.2"
     minSdk = 14
     libraryVersion = "1.0.0"
-    supportVersion = "26.0.0"
+    supportVersion = "26.0.2"
 }
