@@ -20,6 +20,7 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.ObservableSource;
+import io.reactivex.SingleSource;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
 
@@ -123,6 +124,33 @@ public class RxGps {
                 .lastElement();
     }
 
+    public Maybe<Location> lastLocationIfExists() {
+        return checkPlayServicesAvailable()
+            .flatMap(new Function<Boolean, ObservableSource<Boolean>>() {
+                @Override
+                public ObservableSource<Boolean> apply(@android.support.annotation.NonNull Boolean aBoolean) throws Exception {
+                    return request(Manifest.permission.ACCESS_COARSE_LOCATION);
+                }
+            })
+            .flatMapSingle(new Function<Boolean, SingleSource<Boolean>>() {
+                @Override
+                public SingleSource<Boolean> apply(Boolean aBoolean) throws Exception {
+                    return rxLocation.location().isLocationAvailable();
+                }
+            })
+            .flatMapMaybe(new Function<Boolean, MaybeSource<Location>>() {
+                @Override
+                public MaybeSource<Location> apply(@android.support.annotation.NonNull Boolean isExists) throws Exception {
+                    if (isExists) {
+                        return rxLocation.location().lastLocation();
+                    } else {
+                        throw new RxGps.LastLocationUnavailableException();
+                    }
+                }
+            })
+            .lastElement();
+    }
+
     private Observable<Boolean> checkPlayServicesAvailable() {
         return Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
@@ -156,6 +184,12 @@ public class RxGps {
     public static class PlayServicesNotAvailableException extends Exception {
         public PlayServicesNotAvailableException() {
             super("Make sure play services are installed in your device");
+        }
+    }
+
+    public static class LastLocationUnavailableException extends Exception {
+        public LastLocationUnavailableException() {
+            super("Last location not found");
         }
     }
 }
