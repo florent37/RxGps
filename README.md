@@ -8,12 +8,13 @@ Finding current location cannot be easier on Android !
  
 <b>- Check if play services are available for you ;)</b>
 
+# Changes 
 
-<a href="https://goo.gl/WXW8Dc">
-  <img alt="Android app on Google Play" src="https://developer.android.com/images/brand/en_app_rgb_wo_45.png" />
-</a>
+Updated Tbruyelle Rx Permission Lib to latest version. Main reason was the old version of the lib used the non support fragment manager
 
+RxGps, updated RxJava2, Support Lib and Location dependencies
 
+Fixed a crash caused by the update. Any invocation from the RxPermission has to run on the main thread
 
 # Download
 
@@ -23,7 +24,6 @@ In your module [![Download](https://api.bintray.com/packages/florent37/maven/RxG
 ```java
 compile 'com.github.florent37:rxgps:(last version)'
 ```
-
 
 # Usage
 
