@@ -6,8 +6,8 @@ android {
     defaultConfig {
         minSdkVersion project.minSdk
         targetSdkVersion project.sdk
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.1"
     }
 
     compileOptions {
@@ -22,26 +22,25 @@ dependencies {
     implementation "com.github.tbruyelle:rxpermissions:${project.tbruyelleRxPermissions}"
 }
 
-
 ext {
     bintrayRepo = 'maven'
     bintrayName = 'RxGps'
-    orgName = 'florent37'
+    orgName = 'Ersen'
 
-    publishedGroupId = 'com.github.florent37'
+    publishedGroupId = 'com.github.ersen'
     libraryName = 'RxGps'
     artifact = 'rxgps'
 
     libraryDescription = 'RxGps'
 
-    siteUrl = 'https://github.com/florent37/RxGps'
-    gitUrl = 'https://github.com/florent37/RxGps.git'
+    siteUrl = 'https://github.com/ersen-lw/RxGps'
+    gitUrl = 'https://github.com/ersen-lw/RxGps.git'
 
     libraryVersion = rootProject.ext.libraryVersion
 
-    developerId = 'florent37'
-    developerName = 'Florent Champigny'
-    developerEmail = 'champigny.florent@gmail.com'
+    developerId = 'ersen-lw'
+    developerName = 'Ersen Osman'
+    developerEmail = ''
 
     licenseName = 'The Apache Software License, Version 2.0'
     licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
