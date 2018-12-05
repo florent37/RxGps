@@ -8,7 +8,7 @@ Finding current location cannot be easier on Android !
  
 <b>- Check if play services are available for you ;)</b>
 
-# Changes 
+# Fork Changes 
 
 Updated Tbruyelle Rx Permission Lib to latest version. Main reason was the old version of the lib used the non support fragment manager
 
