@@ -1,80 +1,114 @@
 package com.github.florent37.rxgps.sample;
 
 import android.location.Address;
+import android.location.Location;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.florent37.rxgps.RxGps;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends BaseActivity {
 
-    @BindView(R.id.tv_current_location) TextView locationText;
-    @BindView(R.id.tv_current_address) TextView addressText;
+	private RxGps rxGps;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+		rxGps = new RxGps(this, AndroidSchedulers.mainThread(), Schedulers.io());
 
-        final RxGps rxGps = new RxGps(this);
+	}
 
-        rxGps.lastLocation()
+	@Override
+	protected void onStart() {
+		super.onStart();
+		locationHighAccuracy();
+		locationLowPower();
+		locationBalancedPowerAccuracy();
+		locationNoPower();
+		lastLocation();
+		geoCode();
+	}
 
-                .doOnSubscribe(this::addDisposable)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
+	private void locationHighAccuracy() {
+		addDisposable(rxGps.locationHighAccuracy()
+			.subscribeOn(Schedulers.io())
+			.observeOn(AndroidSchedulers.mainThread())
+			.subscribe(
+				location -> displayLocation(findViewById(R.id.tv_location_high_accuracy_location), location),
+				this::displayError));
+	}
 
-                .subscribe(location -> {
-                    locationText.setText(location.getLatitude() + ", " + location.getLongitude());
-                }, throwable -> {
-                    if (throwable instanceof RxGps.PermissionException) {
-                        displayError(throwable.getMessage());
-                    } else if (throwable instanceof RxGps.PlayServicesNotAvailableException) {
-                        displayError(throwable.getMessage());
-                    }
-                });
+	private void locationLowPower() {
+		addDisposable(rxGps.locationLowPower()
+			.subscribeOn(Schedulers.io())
+			.observeOn(AndroidSchedulers.mainThread())
+			.subscribe(
+				location -> displayLocation(findViewById(R.id.tv_location_low_power), location),
+				this::displayError));
+	}
 
-        rxGps.locationLowPower()
-                .flatMapMaybe(rxGps::geocoding)
+	private void locationBalancedPowerAccuracy() {
+		addDisposable(rxGps.locationBalancedPowerAccuracy()
+			.subscribeOn(Schedulers.io())
+			.observeOn(AndroidSchedulers.mainThread())
+			.subscribe(
+				location -> displayLocation(findViewById(R.id.tv_location_balanced_power_accuracy), location),
+				this::displayError));
+	}
 
-                .doOnSubscribe(this::addDisposable)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
+	private void locationNoPower() {
+		addDisposable(rxGps.locationNoPower()
+			.subscribeOn(Schedulers.io())
+			.observeOn(AndroidSchedulers.mainThread())
+			.subscribe(
+				location -> displayLocation(findViewById(R.id.tv_location_no_power), location),
+				this::displayError));
+	}
 
-                .subscribe(address -> {
-                    addressText.setText(getAddressText(address));
-                }, throwable -> {
-                    if (throwable instanceof RxGps.PermissionException) {
-                        displayError(throwable.getMessage());
-                    } else if (throwable instanceof RxGps.PlayServicesNotAvailableException) {
-                        displayError(throwable.getMessage());
-                    }
-                });
-    }
+	private void lastLocation() {
+		addDisposable(rxGps.lastLocation()
+			.subscribeOn(Schedulers.io())
+			.observeOn(AndroidSchedulers.mainThread())
+			.subscribe(
+				location -> displayLocation(findViewById(R.id.tv_last_location), location),
+				this::displayError));
+	}
 
-    public void displayError(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-    }
+	private void geoCode() {
+		addDisposable(rxGps.locationLowPower()
+			.flatMapMaybe(rxGps::geoCoding)
+			.subscribeOn(Schedulers.io())
+			.observeOn(AndroidSchedulers.mainThread())
+			.subscribe(address -> {
+				displayAddressText(findViewById(R.id.tv_geo_code), address);
+			}, this::displayError));
+	}
 
-    private String getAddressText(Address address) {
-        String addressText = "";
-        final int maxAddressLineIndex = address.getMaxAddressLineIndex();
+	private void displayLocation(TextView textView, Location location) {
+		textView.setText(location.getLatitude() + ", " + location.getLongitude());
+	}
 
-        for (int i = 0; i <= maxAddressLineIndex; i++) {
-            addressText += address.getAddressLine(i);
-            if (i != maxAddressLineIndex) {
-                addressText += "\n";
-            }
-        }
+	private void displayError(Throwable throwable) {
+		Toast.makeText(this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
+	}
 
-        return addressText;
-    }
+	private void displayAddressText(TextView textView, Address address) {
+		StringBuilder addressText = new StringBuilder();
+		final int maxAddressLineIndex = address.getMaxAddressLineIndex();
+
+		for (int i = 0; i <= maxAddressLineIndex; i++) {
+			addressText.append(address.getAddressLine(i));
+			if (i != maxAddressLineIndex) {
+				addressText.append("\n");
+			}
+		}
+
+		textView.setText(addressText.toString());
+	}
 
 }

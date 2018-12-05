@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+<<<<<<< HEAD
   <component name="MarkdownProjectSettings">
     <PreviewSettings splitEditorLayout="SPLIT" splitEditorPreview="PREVIEW" useGrayscaleRendering="false" zoomFactor="1.0" maxImageWidth="0" showGitHubPageIfSynced="false" allowBrowsingInPreview="false" synchronizePreviewPosition="true" highlightPreviewType="LINE" highlightFadeOut="5" highlightOnTyping="true" synchronizeSourcePosition="true" verticallyAlignSourceAndPreviewSyncPosition="true" showSearchHighlightsInPreview="true" showSelectionInPreview="true" openRemoteLinks="true">
       <PanelProvider>
@@ -69,27 +70,47 @@
       <textMaps />
     </LinkMapSettings>
   </component>
+=======
+>>>>>>> 9455ad6... Updated Tbruyelle Rx Permission Lib to latest version. Main reason was this lib used the non support fragment manager
   <component name="NullableNotNullManager">
     <option name="myDefaultNullable" value="android.support.annotation.Nullable" />
     <option name="myDefaultNotNull" value="android.support.annotation.NonNull" />
     <option name="myNullables">
       <value>
+<<<<<<< HEAD
         <list size="5">
+=======
+        <list size="7">
+>>>>>>> 9455ad6... Updated Tbruyelle Rx Permission Lib to latest version. Main reason was this lib used the non support fragment manager
           <item index="0" class="java.lang.String" itemvalue="org.jetbrains.annotations.Nullable" />
           <item index="1" class="java.lang.String" itemvalue="javax.annotation.Nullable" />
           <item index="2" class="java.lang.String" itemvalue="javax.annotation.CheckForNull" />
           <item index="3" class="java.lang.String" itemvalue="edu.umd.cs.findbugs.annotations.Nullable" />
           <item index="4" class="java.lang.String" itemvalue="android.support.annotation.Nullable" />
+<<<<<<< HEAD
+=======
+          <item index="5" class="java.lang.String" itemvalue="androidx.annotation.Nullable" />
+          <item index="6" class="java.lang.String" itemvalue="androidx.annotation.RecentlyNullable" />
+>>>>>>> 9455ad6... Updated Tbruyelle Rx Permission Lib to latest version. Main reason was this lib used the non support fragment manager
         </list>
       </value>
     </option>
     <option name="myNotNulls">
       <value>
+<<<<<<< HEAD
         <list size="4">
+=======
+        <list size="6">
+>>>>>>> 9455ad6... Updated Tbruyelle Rx Permission Lib to latest version. Main reason was this lib used the non support fragment manager
           <item index="0" class="java.lang.String" itemvalue="org.jetbrains.annotations.NotNull" />
           <item index="1" class="java.lang.String" itemvalue="javax.annotation.Nonnull" />
           <item index="2" class="java.lang.String" itemvalue="edu.umd.cs.findbugs.annotations.NonNull" />
           <item index="3" class="java.lang.String" itemvalue="android.support.annotation.NonNull" />
+<<<<<<< HEAD
+=======
+          <item index="4" class="java.lang.String" itemvalue="androidx.annotation.NonNull" />
+          <item index="5" class="java.lang.String" itemvalue="androidx.annotation.RecentlyNonNull" />
+>>>>>>> 9455ad6... Updated Tbruyelle Rx Permission Lib to latest version. Main reason was this lib used the non support fragment manager
         </list>
       </value>
     </option>

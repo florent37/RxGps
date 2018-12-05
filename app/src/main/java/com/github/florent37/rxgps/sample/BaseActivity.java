@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
-public class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity {
     private CompositeDisposable compositeDisposable;
 
     @Override

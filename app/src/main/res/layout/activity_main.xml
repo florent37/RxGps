@@ -10,11 +10,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Current location"
+        android:text="locationHighAccuracy"
         style="@style/TextAppearance.AppCompat.Caption"/>
 
     <TextView
-        android:id="@+id/tv_current_location"
+        android:id="@+id/tv_location_high_accuracy_location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Not available"
@@ -24,15 +24,70 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Current address"
+        android:text="locationLowPower"
         style="@style/TextAppearance.AppCompat.Caption"/>
 
     <TextView
-        android:id="@+id/tv_current_address"
+        android:id="@+id/tv_location_low_power"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Not available"
         style="@style/TextAppearance.AppCompat.Body1"/>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="locationBalancedPowerAccuracy"
+        style="@style/TextAppearance.AppCompat.Caption"/>
+
+    <TextView
+        android:id="@+id/tv_location_balanced_power_accuracy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Not available"
+        style="@style/TextAppearance.AppCompat.Body1"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="locationNoPower"
+        style="@style/TextAppearance.AppCompat.Caption"/>
+
+    <TextView
+        android:id="@+id/tv_location_no_power"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Not available"
+        style="@style/TextAppearance.AppCompat.Body1"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="lastLocation"
+        style="@style/TextAppearance.AppCompat.Caption"/>
+
+    <TextView
+        android:id="@+id/tv_last_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Not available"
+        style="@style/TextAppearance.AppCompat.Body1"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="geoCode"
+        style="@style/TextAppearance.AppCompat.Caption"/>
+
+    <TextView
+        android:id="@+id/tv_geo_code"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Not available"
+        style="@style/TextAppearance.AppCompat.Body1"/>
 
 </LinearLayout>

@@ -4,11 +4,13 @@ import android.Manifest;
 import android.app.Activity;
 import android.location.Address;
 import android.location.Location;
+import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
 
-import com.patloew.rxlocation.RxLocation;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.LocationRequest;
+import com.patloew.rxlocation.RxLocation;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.lang.ref.WeakReference;
@@ -17,179 +19,156 @@ import java.util.concurrent.TimeUnit;
 import io.reactivex.Maybe;
 import io.reactivex.MaybeSource;
 import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.ObservableSource;
+import io.reactivex.Scheduler;
 import io.reactivex.SingleSource;
-import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
 
 @SuppressWarnings("MissingPermission")
 public class RxGps {
 
-    private final WeakReference<Activity> activityReference;
-    private final RxLocation rxLocation;
-    private final RxPermissions rxPermissions;
-    private long interval = 5000l;
+	private final WeakReference<Activity> activityReference;
+	private final Scheduler uiScheduler;
+	private final Scheduler backgroundScheduler;
+	private final RxLocation rxLocation;
+	private final RxPermissions rxPermissions;
+	private long interval = 5000L;
 
-    public RxGps(RxLocation rxLocation, Activity activity) {
-        this.rxLocation = rxLocation;
-        this.rxPermissions = new RxPermissions(activity);
-        this.activityReference = new WeakReference<Activity>(activity);
-    }
+	public RxGps(@NonNull RxLocation rxLocation,
+	             @NonNull FragmentActivity activity,
+	             @NonNull Scheduler uiScheduler,
+	             @NonNull Scheduler backgroundScheduler) {
+		this.rxLocation = rxLocation;
+		this.rxPermissions = new RxPermissions(activity);
+		this.activityReference = new WeakReference<>(activity);
+		this.uiScheduler = uiScheduler;
+		this.backgroundScheduler = backgroundScheduler;
+	}
 
-    public RxGps(Activity activity) {
-        this(new RxLocation(activity), activity);
-        this.rxLocation.setDefaultTimeout(15, TimeUnit.SECONDS);
-    }
+	public RxGps(@NonNull FragmentActivity activity,
+	             @NonNull Scheduler uiScheduler,
+	             @NonNull Scheduler backgroundScheduler) {
+		this(new RxLocation(activity), activity, uiScheduler, backgroundScheduler);
+		this.rxLocation.setDefaultTimeout(15, TimeUnit.SECONDS);
+	}
 
-    public RxGps setInterval(long interval) {
-        this.interval = interval;
-        return this;
-    }
+	private Observable<Location> location(LocationRequest locationRequest, String... permissions) {
+		return checkPlayServicesAvailable()
+			.subscribeOn(uiScheduler)
+			.flatMap((Function<Boolean, ObservableSource<Boolean>>) aBoolean -> request(permissions))
+			.subscribeOn(backgroundScheduler)
+			.flatMap((Function<Boolean, ObservableSource<Location>>) aBoolean -> rxLocation.location().updates(locationRequest));
+	}
 
-    private Observable<Location> location(LocationRequest locationRequest, String... permissions) {
-        return checkPlayServicesAvailable()
-                .flatMap(new Function<Boolean, ObservableSource<Boolean>>() {
-                    @Override
-                    public ObservableSource<Boolean> apply(@NonNull Boolean aBoolean) throws Exception {
-                        return request(permissions);
-                    }
-                })
-                .flatMap(new Function<Boolean, ObservableSource<Location>>() {
-                    @Override
-                    public ObservableSource<Location> apply(@NonNull Boolean aBoolean) throws Exception {
-                        return rxLocation.location().updates(locationRequest);
-                    }
-                });
-    }
+	private Observable<Boolean> request(String... permissions) {
+		return rxPermissions.request(permissions)
+			.flatMap((Function<Boolean, ObservableSource<Boolean>>) permit -> {
+				if (!permit) {
+					return Observable.error(new PermissionException());
+				}
+				return Observable.just(true);
+			});
+	}
 
-    private Observable<Boolean> request(String... permissions) {
-        return rxPermissions.request(permissions)
-                .flatMap(new Function<Boolean, ObservableSource<Boolean>>() {
-                    @Override
-                    public ObservableSource<Boolean> apply(@NonNull Boolean permit) throws Exception {
-                        if (!permit) {
-                            return Observable.error(new PermissionException());
-                        }
-                        return Observable.just(permit);
-                    }
-                });
-    }
+	public RxGps setInterval(long interval) {
+		this.interval = interval;
+		return this;
+	}
 
-    public Observable<Location> locationHight() {
-        return location(LocationRequest.create()
-                        .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                        .setInterval(interval),
-                Manifest.permission.ACCESS_FINE_LOCATION
-        );
-    }
+	public Observable<Location> locationHighAccuracy() {
+		return location(LocationRequest.create()
+				.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+				.setInterval(interval),
+			Manifest.permission.ACCESS_FINE_LOCATION
+		);
+	}
 
-    public Observable<Location> locationLowPower() {
-        return location(LocationRequest.create()
-                        .setPriority(LocationRequest.PRIORITY_LOW_POWER)
-                        .setInterval(interval),
-                Manifest.permission.ACCESS_COARSE_LOCATION
-        );
-    }
+	public Observable<Location> locationLowPower() {
+		return location(LocationRequest.create()
+				.setPriority(LocationRequest.PRIORITY_LOW_POWER)
+				.setInterval(interval),
+			Manifest.permission.ACCESS_COARSE_LOCATION
+		);
+	}
 
-    public Observable<Location> locationBalancedPowerAcuracy() {
-        return location(LocationRequest.create()
-                        .setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY)
-                        .setInterval(interval),
-                Manifest.permission.ACCESS_COARSE_LOCATION);
-    }
+	public Observable<Location> locationBalancedPowerAccuracy() {
+		return location(LocationRequest.create()
+				.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY)
+				.setInterval(interval),
+			Manifest.permission.ACCESS_COARSE_LOCATION);
+	}
 
-    public Observable<Location> locationNoPower() {
-        return location(LocationRequest.create()
-                        .setPriority(LocationRequest.PRIORITY_NO_POWER)
-                        .setInterval(interval),
-                Manifest.permission.ACCESS_COARSE_LOCATION);
-    }
+	public Observable<Location> locationNoPower() {
+		return location(LocationRequest.create()
+				.setPriority(LocationRequest.PRIORITY_NO_POWER)
+				.setInterval(interval),
+			Manifest.permission.ACCESS_COARSE_LOCATION);
+	}
 
-    public Maybe<Location> lastLocation() {
-        return checkPlayServicesAvailable()
-                .flatMap(new Function<Boolean, ObservableSource<Boolean>>() {
-                    @Override
-                    public ObservableSource<Boolean> apply(@NonNull Boolean aBoolean) throws Exception {
-                        return request(Manifest.permission.ACCESS_COARSE_LOCATION);
-                    }
-                })
-                .flatMapMaybe(new Function<Boolean, MaybeSource<Location>>() {
-                    @Override
-                    public MaybeSource<Location> apply(@NonNull Boolean aBoolean) throws Exception {
-                        return rxLocation.location().lastLocation();
-                    }
-                })
-                .lastElement();
-    }
+	public Maybe<Location> lastLocation() {
+		return checkPlayServicesAvailable()
+			.subscribeOn(uiScheduler)
+			.flatMap((Function<Boolean, ObservableSource<Boolean>>) aBoolean -> request(Manifest.permission.ACCESS_COARSE_LOCATION))
+			.subscribeOn(backgroundScheduler)
+			.flatMapMaybe((Function<Boolean, MaybeSource<Location>>) aBoolean -> rxLocation.location().lastLocation())
+			.lastElement();
+	}
 
-    public Maybe<Location> lastLocationIfExists() {
-        return checkPlayServicesAvailable()
-            .flatMap(new Function<Boolean, ObservableSource<Boolean>>() {
-                @Override
-                public ObservableSource<Boolean> apply(@android.support.annotation.NonNull Boolean aBoolean) throws Exception {
-                    return request(Manifest.permission.ACCESS_COARSE_LOCATION);
-                }
-            })
-            .flatMapSingle(new Function<Boolean, SingleSource<Boolean>>() {
-                @Override
-                public SingleSource<Boolean> apply(Boolean aBoolean) throws Exception {
-                    return rxLocation.location().isLocationAvailable();
-                }
-            })
-            .flatMapMaybe(new Function<Boolean, MaybeSource<Location>>() {
-                @Override
-                public MaybeSource<Location> apply(@android.support.annotation.NonNull Boolean isExists) throws Exception {
-                    if (isExists) {
-                        return rxLocation.location().lastLocation();
-                    } else {
-                        throw new RxGps.LastLocationUnavailableException();
-                    }
-                }
-            })
-            .lastElement();
-    }
+	public Maybe<Location> lastLocationIfExists() {
+		return checkPlayServicesAvailable()
+			.subscribeOn(uiScheduler)
+			.flatMap((Function<Boolean, ObservableSource<Boolean>>) aBoolean -> request(Manifest.permission.ACCESS_COARSE_LOCATION))
+			.subscribeOn(backgroundScheduler)
+			.flatMapSingle((Function<Boolean, SingleSource<Boolean>>) aBoolean -> rxLocation.location().isLocationAvailable())
+			.flatMapMaybe((Function<Boolean, MaybeSource<Location>>) isExists -> {
+				if (isExists) {
+					return rxLocation.location().lastLocation();
+				} else {
+					throw new LastLocationUnavailableException();
+				}
+			})
+			.lastElement();
+	}
 
-    private Observable<Boolean> checkPlayServicesAvailable() {
-        return Observable.create(new ObservableOnSubscribe<Boolean>() {
-            @Override
-            public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
-                final Activity activity = activityReference.get();
-                if (activity != null) {
-                    final GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
-                    final int status = apiAvailability.isGooglePlayServicesAvailable(activity);
+	public Maybe<Address> geoCoding(Location location) {
+		return rxLocation
+			.geocoding()
+			.fromLocation(location)
+			.subscribeOn(backgroundScheduler);
+	}
 
-                    if (status != ConnectionResult.SUCCESS) {
-                        e.onError(new PlayServicesNotAvailableException());
-                    } else {
-                        e.onNext(true);
-                        e.onComplete();
-                    }
-                }
-            }
-        });
-    }
+	private Observable<Boolean> checkPlayServicesAvailable() {
+		return Observable.create(e -> {
+			final Activity activity = activityReference.get();
+			if (activity != null) {
+				final GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+				final int status = apiAvailability.isGooglePlayServicesAvailable(activity);
 
-    public Maybe<Address> geocoding(Location location) {
-        return rxLocation.geocoding().fromLocation(location);
-    }
+				if (status != ConnectionResult.SUCCESS) {
+					e.onError(new PlayServicesNotAvailableException());
+				} else {
+					e.onNext(true);
+					e.onComplete();
+				}
+			}
+		});
+	}
 
-    public static class PermissionException extends Exception {
-        public PermissionException() {
-            super("Can't access location without permission");
-        }
-    }
+	public static class PermissionException extends Exception {
+		public PermissionException() {
+			super("Can't access location without permission");
+		}
+	}
 
-    public static class PlayServicesNotAvailableException extends Exception {
-        public PlayServicesNotAvailableException() {
-            super("Make sure play services are installed in your device");
-        }
-    }
+	public static class PlayServicesNotAvailableException extends Exception {
+		public PlayServicesNotAvailableException() {
+			super("Make sure play services are installed in your device");
+		}
+	}
 
-    public static class LastLocationUnavailableException extends Exception {
-        public LastLocationUnavailableException() {
-            super("Last location not found");
-        }
-    }
+	public static class LastLocationUnavailableException extends Exception {
+		public LastLocationUnavailableException() {
+			super("Last location not found");
+		}
+	}
 }
