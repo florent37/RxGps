@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-<<<<<<< HEAD
-      <module fileurl="file://$PROJECT_DIR$/RxGps.iml" filepath="$PROJECT_DIR$/RxGps.iml" />
-=======
       <module fileurl="file://$PROJECT_DIR$/RxGps-master.iml" filepath="$PROJECT_DIR$/RxGps-master.iml" />
->>>>>>> 9455ad6... Updated Tbruyelle Rx Permission Lib to latest version. Main reason was this lib used the non support fragment manager
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/rxgps/rxgps.iml" filepath="$PROJECT_DIR$/rxgps/rxgps.iml" />
     </modules>
