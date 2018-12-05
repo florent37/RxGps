@@ -22,7 +22,7 @@ Fixed a crash caused by the update. Any invocation from the RxPermission has to 
 
 In your module [![Download](https://api.bintray.com/packages/florent37/maven/RxGps/images/download.svg)](https://bintray.com/florent37/maven/RxGps/_latestVersion)
 ```java
-compile 'com.github.florent37:rxgps:(last version)'
+implementation 'com.github.ersen:rxgps:(last version)'
 ```
 
 # Usage
